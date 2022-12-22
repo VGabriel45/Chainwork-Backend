@@ -1,0 +1,18 @@
+version: '3'
+services:
+  chainwork-db:
+    image: mysql:latest
+    container_name: chainwork-db
+    environment:
+      - MYSQL_DB=${MYSQL_DB}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - "5432:3306"
+
+volumes:
+  mysql:
+    name: chainwork
