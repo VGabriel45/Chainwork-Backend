@@ -1,8 +1,9 @@
 type User {
   id: Int!
-  username: String
+  username: String!
   password: String
-  email: String
+  email: String!
+  jobs: [Job!]!
 }
 
 input CreateUserInput {
@@ -21,6 +22,7 @@ input UpdateUserInput {
 type Query {
   users: [User]!
   user(id: Int!): User
+  userByUsername(username: String!): User
 }
 
 type Mutation {

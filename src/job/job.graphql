@@ -1,0 +1,40 @@
+type Job {
+  id: Int
+  title: String 
+  description: String
+  rateMin: Int
+  rateMax: Int
+  fixedRate: Int
+
+  userId: Int
+  user: User
+}
+
+input CreateJobInput {
+  title: String!
+  description: String!
+  rateMin: Int!
+  rateMax: Int!
+  fixedRate: Int!
+}
+
+input UpdateJobInput {
+  id: Int!
+  title: String 
+  description: String
+  rateMin: Int
+  rateMax: Int
+  fixedRate: Int
+  userId: Int
+}
+
+type Query {
+  jobs: [Job]!
+  job(id: Int!): Job
+}
+
+type Mutation {
+  createJob(createJobInput: CreateJobInput!): Job!
+  updateJob(updateJobInput: UpdateJobInput!): Job!
+  removeJob(id: Int!): Job
+}

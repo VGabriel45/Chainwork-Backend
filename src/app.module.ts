@@ -8,6 +8,8 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
 import { UserModule } from './user/user.module';
+import { JobModule } from './job/job.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { UserModule } from './user/user.module';
     }),
     PrismaModule,
     UserModule,
+    JobModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -1,0 +1,31 @@
+type LoginResponse {
+    user: User!
+    access_token: String!
+}
+
+type SignupResponse {
+  userId: Int
+}
+
+type JwtPayload {
+  username: String!
+  sub: Int!
+  iat: Int!
+  exp: Int!
+}
+
+input LoginUserInput {
+    username: String!
+    password: String!
+}
+
+input SignupUserInput {
+  username: String!
+  password: String!
+  email: String!
+}
+
+type Mutation {
+  login(loginUserInput: LoginUserInput!): LoginResponse
+  signup(signupUserInput: SignupUserInput!): User
+}

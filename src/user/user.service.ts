@@ -17,7 +17,20 @@ export class UserService {
   findOne(id: number) {
     return this.prisma.user.findUnique({
       where: { id },
-      select: { id: true, username: true, email: true },
+      select: { id: true, username: true, email: true, jobs: true },
+    });
+  }
+
+  findOneByUsername(username: string) {
+    return this.prisma.user.findUnique({
+      where: { username },
+      select: {
+        id: true,
+        password: true,
+        username: true,
+        email: true,
+        jobs: true,
+      },
     });
   }
 
