@@ -28,9 +28,10 @@ export class UserService {
       where: { username },
       select: {
         id: true,
-        password: true,
         username: true,
+        password: true,
         email: true,
+        refreshToken: true,
         jobs: true,
       },
     });

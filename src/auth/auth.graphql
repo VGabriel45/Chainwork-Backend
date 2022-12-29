@@ -4,7 +4,9 @@ type SignInResponse {
 }
 
 type SignupResponse {
-  userId: Int
+  user: User,
+  accessToken: String,
+  refreshToken: String
 }
 
 type JwtPayload {

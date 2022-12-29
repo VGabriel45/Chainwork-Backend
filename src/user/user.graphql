@@ -1,9 +1,10 @@
 type User {
   id: Int!
-  username: String!
+  username: String
   password: String
-  email: String!
-  jobs: [Job!]!
+  email: String
+  refreshToken: String
+  jobs: [Job!]
 }
 
 input CreateUserInput {
@@ -13,10 +14,11 @@ input CreateUserInput {
 }
 
 input UpdateUserInput {
-  id: Int!
+  id: Int
   username: String
   password: String
   email: String
+  refreshToken: String
 }
 
 type Query {

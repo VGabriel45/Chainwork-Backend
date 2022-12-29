@@ -44,10 +44,11 @@ export class CreateUserInput {
 }
 
 export class UpdateUserInput {
-    id: number;
+    id?: Nullable<number>;
     username?: Nullable<string>;
     password?: Nullable<string>;
     email?: Nullable<string>;
+    refreshToken?: Nullable<string>;
 }
 
 export class SignInResponse {
@@ -56,7 +57,9 @@ export class SignInResponse {
 }
 
 export class SignupResponse {
-    userId?: Nullable<number>;
+    user?: Nullable<User>;
+    accessToken?: Nullable<string>;
+    refreshToken?: Nullable<string>;
 }
 
 export class JwtPayload {
@@ -109,10 +112,11 @@ export abstract class IQuery {
 
 export class User {
     id: number;
-    username: string;
+    username?: Nullable<string>;
     password?: Nullable<string>;
-    email: string;
-    jobs: Job[];
+    email?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    jobs?: Nullable<Job[]>;
 }
 
 type Nullable<T> = T | null;
