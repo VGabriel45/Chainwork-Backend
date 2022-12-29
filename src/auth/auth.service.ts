@@ -22,7 +22,7 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
+  async signIn(user: User) {
     return {
       user,
       access_token: this.jwtService.sign({
@@ -32,7 +32,7 @@ export class AuthService {
     };
   }
 
-  async signup(signupUserInput: SignupUserInput) {
+  async signUp(signupUserInput: SignupUserInput) {
     return this.userService.create(signupUserInput);
   }
 }

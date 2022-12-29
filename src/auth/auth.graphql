@@ -1,4 +1,4 @@
-type LoginResponse {
+type SignInResponse {
     user: User!
     access_token: String!
 }
@@ -14,7 +14,7 @@ type JwtPayload {
   exp: Int!
 }
 
-input LoginUserInput {
+input SignInUserInput {
     username: String!
     password: String!
 }
@@ -26,6 +26,6 @@ input SignupUserInput {
 }
 
 type Mutation {
-  login(loginUserInput: LoginUserInput!): LoginResponse
-  signup(signupUserInput: SignupUserInput!): User
+  signIn(signInUserInput: SignInUserInput!): SignInResponse
+  signUp(signUpUserInput: SignupUserInput!): User
 }

@@ -8,7 +8,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export class LoginUserInput {
+export class SignInUserInput {
     username: string;
     password: string;
 }
@@ -50,7 +50,7 @@ export class UpdateUserInput {
     email?: Nullable<string>;
 }
 
-export class LoginResponse {
+export class SignInResponse {
     user: User;
     access_token: string;
 }
@@ -67,9 +67,9 @@ export class JwtPayload {
 }
 
 export abstract class IMutation {
-    abstract login(loginUserInput: LoginUserInput): Nullable<LoginResponse> | Promise<Nullable<LoginResponse>>;
+    abstract signIn(signInUserInput: SignInUserInput): Nullable<SignInResponse> | Promise<Nullable<SignInResponse>>;
 
-    abstract signup(signupUserInput: SignupUserInput): Nullable<User> | Promise<Nullable<User>>;
+    abstract signUp(signUpUserInput: SignupUserInput): Nullable<User> | Promise<Nullable<User>>;
 
     abstract createJob(createJobInput: CreateJobInput): Job | Promise<Job>;
 
