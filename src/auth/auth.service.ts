@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { SignupResponse, SignupUserInput, User } from 'src/types/graphql';
+import { SignInResponse, SignupResponse, SignupUserInput, User } from 'src/types/graphql';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 
@@ -22,7 +22,7 @@ export class AuthService {
     return null;
   }
 
-  async signIn(user: User) {
+  async signIn(user: User): Promise<SignInResponse> {
     const { accessToken, refreshToken } = await this.createTokens(
       user.id,
       user.email,
@@ -41,7 +41,12 @@ export class AuthService {
     return { user, accessToken, refreshToken };
   }
 
-  async createTokens(userId: number, userEmail: string) {
+  async logout(userId: number) {
+    const user = await this.userService.update(userId, {refreshToken: ''});
+    return user.id;
+  }
+
+  async createTokens(userId: number, userEmail: string): Promise<{accessToken: string, refreshToken: string}> {
     const accessToken = this.jwtService.sign(
       {
         email: userEmail,
@@ -60,8 +65,9 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async updateRefreshToken(userId: number, refreshToken: string) {
+  async updateRefreshToken(userId: number, refreshToken: string): Promise<string>{
     const newRefreshToken = await bcrypt.hash(refreshToken, 10);
     await this.userService.update(userId, { refreshToken: newRefreshToken });
+    return newRefreshToken;
   }
 }

@@ -1,6 +1,7 @@
 type SignInResponse {
     user: User!
-    access_token: String!
+    accessToken: String!
+    refreshToken: String!
 }
 
 type SignupResponse {
@@ -27,7 +28,14 @@ input SignupUserInput {
   email: String!
 }
 
+input RefreshInput {
+  refreshToken: String!
+  userId: Int!
+}
+
 type Mutation {
   signIn(signInUserInput: SignInUserInput!): SignInResponse
-  signUp(signUpUserInput: SignupUserInput!): User
+  signUp(signUpUserInput: SignupUserInput!): SignupResponse
+  logout(userId: Int!): Int
+  refresh(refreshInput: RefreshInput!): String
 }

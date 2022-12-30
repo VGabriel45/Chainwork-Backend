@@ -1,13 +1,10 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
-import {
-  SignInResponse,
-  SignupResponse,
-  SignupUserInput,
-} from 'src/types/graphql';
+import { RefreshInput, SignInResponse, SignupResponse } from 'src/types/graphql';
 import { AuthService } from './auth.service';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
 import * as bcrypt from 'bcrypt';
+import { SignupInput } from './dto/signup-input';
 
 @Resolver()
 export class AuthResolver {
@@ -20,23 +17,20 @@ export class AuthResolver {
   }
 
   @Mutation(() => SignupResponse)
-  async signUp(@Args('signUpUserInput') signUpUserInput: SignupUserInput) {
+  async signUp(@Args('signUpUserInput') signUpUserInput: SignupInput) {
     const password = await bcrypt.hash(signUpUserInput.password, 10);
     signUpUserInput.password = password;
     return await this.authService.signUp(signUpUserInput);
   }
 
-  // @Mutation(() => User)
-  // async logout(@Args('signupUserInput') signupUserInput: SignupUserInput) {
-  //   const password = await bcrypt.hash(signupUserInput.password, 10);
-  //   signupUserInput.password = password;
-  //   return await this.authService.signUp(signupUserInput);
-  // }
+  @Mutation(() => Number)
+  async logout(@Args('userId') userId: number) {
+    return await this.authService.logout(userId);
+  }
 
-  // @Mutation(() => User)
-  // async refresh(@Args('signupUserInput') signupUserInput: SignupUserInput) {
-  //   const password = await bcrypt.hash(signupUserInput.password, 10);
-  //   signupUserInput.password = password;
-  //   return await this.authService.signUp(signupUserInput);
-  // }
+  @Mutation(() => String)
+  async refresh(@Args('refreshInput') refreshInput: RefreshInput) {
+    const newRefreshToken = await this.authService.updateRefreshToken(refreshInput.userId, refreshInput.refreshToken);
+    return newRefreshToken;
+  }
 }
