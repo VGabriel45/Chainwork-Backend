@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { SignInResponse, SignupResponse, SignupUserInput, User } from 'src/types/graphql';
+import { RefreshTokensResponse, SignInResponse, SignupResponse, SignupUserInput, User } from 'src/types/graphql';
 import { UserService } from 'src/user/user.service';
-import * as bcrypt from 'bcrypt';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +13,10 @@ export class AuthService {
 
   async validateUser(username: string, password: string): Promise<any> {
     const user: User = await this.userService.findOneByUsername(username);
-    const passwordValid = await bcrypt.compare(password, user?.password);
+    if(!user){
+      throw new Error('User does not exist');
+    }
+    const passwordValid = await argon2.verify(user?.password, password);
     if (user && passwordValid) {
       const { password, ...result } = user;
       return result;
@@ -38,7 +41,7 @@ export class AuthService {
       user.email,
     );
     await this.updateRefreshToken(user.id, refreshToken);
-    return { user, accessToken, refreshToken };
+    return { user, accessToken, refreshToken};
   }
 
   async logout(userId: number) {
@@ -58,16 +61,37 @@ export class AuthService {
       {
         email: userEmail,
         sub: userId,
-        accessToken: accessToken,
       },
       { expiresIn: '7d', secret: process.env.REFRESH_SECRET },
     );
     return { accessToken, refreshToken };
   }
 
+  hashData(data: string) {
+    return argon2.hash(data);
+  }
+
   async updateRefreshToken(userId: number, refreshToken: string): Promise<string>{
-    const newRefreshToken = await bcrypt.hash(refreshToken, 10);
-    await this.userService.update(userId, { refreshToken: newRefreshToken });
-    return newRefreshToken;
+    const hashedRefreshToken = await this.hashData(refreshToken);
+    await this.userService.update(userId, { refreshToken: hashedRefreshToken });
+    return hashedRefreshToken;
+  }
+
+  async refreshTokens(userId: number, refreshTokenArg: string): Promise<RefreshTokensResponse
+  > {
+    const user = await this.userService.findOne(userId);
+    
+    const refreshTokenMatches = await argon2.verify(
+      user.refreshToken,
+      refreshTokenArg,
+    );
+    
+    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+    const tokens = await this.createTokens(
+      user.id,
+      user.email,
+    );
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    return tokens;
   }
 }

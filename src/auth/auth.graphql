@@ -10,6 +10,11 @@ type SignupResponse {
   refreshToken: String
 }
 
+type RefreshTokensResponse {
+  accessToken: String,
+  refreshToken: String
+}
+
 type JwtPayload {
   username: String!
   sub: Int!
@@ -37,5 +42,5 @@ type Mutation {
   signIn(signInUserInput: SignInUserInput!): SignInResponse
   signUp(signUpUserInput: SignupUserInput!): SignupResponse
   logout(userId: Int!): Int
-  refresh(refreshInput: RefreshInput!): String
+  refreshToken(refreshInput: RefreshInput!): RefreshTokensResponse
 }

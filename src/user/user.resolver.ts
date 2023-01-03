@@ -1,8 +1,8 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { SignupInput } from 'src/auth/dto/signup-input';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { UpdateUserInput } from './dto/updateUser-input';
+import { SignupInput } from './types/SignupInput';
+import { UpdateInput } from './types/UpdateInput';
 import { UserService } from './user.service';
 
 @Resolver('User')
@@ -31,7 +31,7 @@ export class UserResolver {
   }
 
   @Mutation('updateUser')
-  update(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+  update(@Args('updateUserInput') updateUserInput: UpdateInput) {
     return this.userService.update(updateUserInput.id, updateUserInput);
   }
 

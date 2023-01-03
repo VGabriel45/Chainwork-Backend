@@ -68,6 +68,11 @@ export class SignupResponse {
     refreshToken?: Nullable<string>;
 }
 
+export class RefreshTokensResponse {
+    accessToken?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+}
+
 export class JwtPayload {
     username: string;
     sub: number;
@@ -82,7 +87,7 @@ export abstract class IMutation {
 
     abstract logout(userId: number): Nullable<number> | Promise<Nullable<number>>;
 
-    abstract refresh(refreshInput: RefreshInput): Nullable<string> | Promise<Nullable<string>>;
+    abstract refreshToken(refreshInput: RefreshInput): Nullable<RefreshTokensResponse> | Promise<Nullable<RefreshTokensResponse>>;
 
     abstract createJob(createJobInput: CreateJobInput): Job | Promise<Job>;
 
