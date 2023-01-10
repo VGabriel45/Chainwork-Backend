@@ -1,20 +1,22 @@
 type User {
   id: Int!
-  username: String
-  password: String
-  email: String
+  username: String!
+  password: String!
+  email: String!
   refreshToken: String
-  jobs: [Job!]
+  clientJobs: [Job]
+  developerJobs: [Job]
+  roles: [Role]
 }
 
 input CreateUserInput {
   username: String!
   password: String!
   email: String!
+  roleId: Int!
 }
 
 input UpdateUserInput {
-  id: Int
   username: String
   password: String
   email: String

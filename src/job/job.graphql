@@ -1,21 +1,25 @@
 type Job {
-  id: Int
-  title: String 
-  description: String
+  id: Int!
+  title: String! 
+  description: String!
   rateMin: Int
   rateMax: Int
   fixedRate: Int
 
-  userId: Int
-  user: User
+  skills: [Skill]
+
+  developer: User
+
+  client: User!
 }
 
 input CreateJobInput {
   title: String!
   description: String!
-  rateMin: Int!
-  rateMax: Int!
-  fixedRate: Int!
+  rateMin: Int
+  rateMax: Int
+  fixedRate: Int
+  employerId: Int!
 }
 
 input UpdateJobInput {

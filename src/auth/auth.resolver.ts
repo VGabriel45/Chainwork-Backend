@@ -1,6 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
-import { RefreshInput, RefreshTokensResponse, SignInResponse, SignupResponse } from 'src/types/graphql';
+import { RefreshInput, RefreshAccessTokenResponse, SignInResponse, SignupResponse } from 'src/types/graphql';
 import { AuthService } from './auth.service';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
 import * as argon2 from 'argon2';
@@ -25,15 +25,15 @@ export class AuthResolver {
     return await this.authService.signUp(signUpUserInput);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Mutation(() => Number)
   async logout(@Args('userId') userId: number) {
     return await this.authService.logout(userId);
   }
 
   // @UseGuards(RefreshTokenGuard)
-  @Mutation(() => RefreshTokensResponse)
-  async refreshToken(@Args('refreshInput') refreshInput: RefreshInput) {
-    return await this.authService.refreshTokens(refreshInput.userId, refreshInput.refreshToken);
+  @Mutation(() => RefreshAccessTokenResponse)
+  async refreshAccessToken(@Args('refreshInput') refreshInput: RefreshInput) {
+    return await this.authService.refreshAccessToken(refreshInput.userId, refreshInput.refreshToken);
   }
 }

@@ -10,6 +10,8 @@ import { PrismaService } from './prisma/prisma.service';
 import { UserModule } from './user/user.module';
 import { JobModule } from './job/job.module';
 import { AuthModule } from './auth/auth.module';
+import { SkillModule } from './skill/skill.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     JobModule,
     AuthModule,
+    SkillModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

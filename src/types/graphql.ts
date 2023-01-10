@@ -17,6 +17,7 @@ export class SignupUserInput {
     username: string;
     password: string;
     email: string;
+    roleId: number;
 }
 
 export class RefreshInput {
@@ -27,9 +28,10 @@ export class RefreshInput {
 export class CreateJobInput {
     title: string;
     description: string;
-    rateMin: number;
-    rateMax: number;
-    fixedRate: number;
+    rateMin?: Nullable<number>;
+    rateMax?: Nullable<number>;
+    fixedRate?: Nullable<number>;
+    employerId: number;
 }
 
 export class UpdateJobInput {
@@ -42,14 +44,35 @@ export class UpdateJobInput {
     userId?: Nullable<number>;
 }
 
+export class CreateRoleInput {
+    name: string;
+    userId: number;
+}
+
+export class UpdateRoleInput {
+    id: number;
+    name?: Nullable<string>;
+}
+
+export class CreateSkillInput {
+    title: string;
+    jobId: number;
+}
+
+export class UpdateSkillInput {
+    id: number;
+    title?: Nullable<string>;
+    jobId?: Nullable<number>;
+}
+
 export class CreateUserInput {
     username: string;
     password: string;
     email: string;
+    roleId: number;
 }
 
 export class UpdateUserInput {
-    id?: Nullable<number>;
     username?: Nullable<string>;
     password?: Nullable<string>;
     email?: Nullable<string>;
@@ -68,9 +91,8 @@ export class SignupResponse {
     refreshToken?: Nullable<string>;
 }
 
-export class RefreshTokensResponse {
+export class RefreshAccessTokenResponse {
     accessToken?: Nullable<string>;
-    refreshToken?: Nullable<string>;
 }
 
 export class JwtPayload {
@@ -87,13 +109,25 @@ export abstract class IMutation {
 
     abstract logout(userId: number): Nullable<number> | Promise<Nullable<number>>;
 
-    abstract refreshToken(refreshInput: RefreshInput): Nullable<RefreshTokensResponse> | Promise<Nullable<RefreshTokensResponse>>;
+    abstract refreshAccessToken(refreshInput: RefreshInput): Nullable<RefreshAccessTokenResponse> | Promise<Nullable<RefreshAccessTokenResponse>>;
 
     abstract createJob(createJobInput: CreateJobInput): Job | Promise<Job>;
 
     abstract updateJob(updateJobInput: UpdateJobInput): Job | Promise<Job>;
 
     abstract removeJob(id: number): Nullable<Job> | Promise<Nullable<Job>>;
+
+    abstract createRole(createRoleInput: CreateRoleInput): Role | Promise<Role>;
+
+    abstract updateRole(updateRoleInput: UpdateRoleInput): Role | Promise<Role>;
+
+    abstract removeRole(id: number): Nullable<Role> | Promise<Nullable<Role>>;
+
+    abstract createSkill(createSkillInput: CreateSkillInput): Skill | Promise<Skill>;
+
+    abstract updateSkill(updateSkillInput: UpdateSkillInput): Skill | Promise<Skill>;
+
+    abstract removeSkill(id: number): Nullable<Skill> | Promise<Nullable<Skill>>;
 
     abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
 
@@ -103,20 +137,29 @@ export abstract class IMutation {
 }
 
 export class Job {
-    id?: Nullable<number>;
-    title?: Nullable<string>;
-    description?: Nullable<string>;
+    id: number;
+    title: string;
+    description: string;
     rateMin?: Nullable<number>;
     rateMax?: Nullable<number>;
     fixedRate?: Nullable<number>;
-    userId?: Nullable<number>;
-    user?: Nullable<User>;
+    skills?: Nullable<Nullable<Skill>[]>;
+    developer?: Nullable<User>;
+    client: User;
 }
 
 export abstract class IQuery {
     abstract jobs(): Nullable<Job>[] | Promise<Nullable<Job>[]>;
 
     abstract job(id: number): Nullable<Job> | Promise<Nullable<Job>>;
+
+    abstract roles(): Nullable<Nullable<Role>[]> | Promise<Nullable<Nullable<Role>[]>>;
+
+    abstract role(id: number): Nullable<Role> | Promise<Nullable<Role>>;
+
+    abstract skills(): Nullable<Nullable<Skill>[]> | Promise<Nullable<Nullable<Skill>[]>>;
+
+    abstract skill(id: number): Nullable<Skill> | Promise<Nullable<Skill>>;
 
     abstract users(): Nullable<User>[] | Promise<Nullable<User>[]>;
 
@@ -125,13 +168,27 @@ export abstract class IQuery {
     abstract userByUsername(username: string): Nullable<User> | Promise<Nullable<User>>;
 }
 
+export class Role {
+    id: number;
+    name: string;
+    users: Nullable<User>[];
+}
+
+export class Skill {
+    id: number;
+    title: string;
+    job?: Nullable<Job>;
+}
+
 export class User {
     id: number;
-    username?: Nullable<string>;
-    password?: Nullable<string>;
-    email?: Nullable<string>;
+    username: string;
+    password: string;
+    email: string;
     refreshToken?: Nullable<string>;
-    jobs?: Nullable<Job[]>;
+    clientJobs?: Nullable<Nullable<Job>[]>;
+    developerJobs?: Nullable<Nullable<Job>[]>;
+    roles?: Nullable<Nullable<Role>[]>;
 }
 
 type Nullable<T> = T | null;

@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { RefreshTokensResponse, SignInResponse, SignupResponse, SignupUserInput, User } from 'src/types/graphql';
+import { RefreshAccessTokenResponse, SignInResponse, SignupResponse, SignupUserInput, User } from 'src/types/graphql';
 import { UserService } from 'src/user/user.service';
 import * as argon2 from 'argon2';
 
@@ -55,7 +55,7 @@ export class AuthService {
         email: userEmail,
         sub: userId,
       },
-      { expiresIn: '15m', secret: process.env.SECRET },
+      { expiresIn: 15, secret: process.env.SECRET },
     );
     const refreshToken = this.jwtService.sign(
       {
@@ -65,6 +65,17 @@ export class AuthService {
       { expiresIn: '7d', secret: process.env.REFRESH_SECRET },
     );
     return { accessToken, refreshToken };
+  }
+
+  async createAccessToken(userId: number, userEmail: string): Promise<string> {
+    const accessToken = this.jwtService.sign(
+      {
+        email: userEmail,
+        sub: userId,
+      },
+      { expiresIn: 15, secret: process.env.SECRET },
+    );
+    return accessToken;
   }
 
   hashData(data: string) {
@@ -77,21 +88,20 @@ export class AuthService {
     return hashedRefreshToken;
   }
 
-  async refreshTokens(userId: number, refreshTokenArg: string): Promise<RefreshTokensResponse
-  > {
+  async refreshAccessToken(userId: number, refreshTokenArg: string): Promise<RefreshAccessTokenResponse> {
     const user = await this.userService.findOne(userId);
     
     const refreshTokenMatches = await argon2.verify(
       user.refreshToken,
       refreshTokenArg,
     );
+    console.log(refreshTokenMatches);
     
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
-    const tokens = await this.createTokens(
+    const newAccessToken = await this.createAccessToken(
       user.id,
       user.email,
     );
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+    return {accessToken: newAccessToken};
   }
 }

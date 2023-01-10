@@ -10,13 +10,13 @@ export class JobService {
   }
 
   findAll() {
-    return this.prisma.job.findMany({ include: { user: true } });
+    return this.prisma.job.findMany({include: {skills: true, developer: true, client: true}});
   }
 
   findOne(id: number) {
     return this.prisma.job.findUnique({
       where: { id },
-      include: { user: true },
+      include: {skills: true, developer: true, client: true}
     });
   }
 

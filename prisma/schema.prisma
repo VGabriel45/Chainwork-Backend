@@ -11,23 +11,41 @@ datasource db {
 }
 
 model Job {
-  id Int @id @default(autoincrement())
-  title String
+  id          Int     @id @default(autoincrement())
+  title       String
   description String
-  rateMin Int
-  rateMax Int
-  fixedRate Int
-  // requiredSkills 
+  rateMin     Int?
+  rateMax     Int?
+  fixedRate   Int?
+  skills      Skill[]
 
-  userId Int?
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  developerId Int?
+  developer   User? @relation("userDeveloper_job", fields: [developerId], references: [id])
+
+  clientId Int?
+  client   User? @relation("userClient_job", fields: [clientId], references: [id])
+}
+
+model Skill {
+  id    Int    @id @default(autoincrement())
+  title String
+  job   Job?   @relation(fields: [jobId], references: [id])
+  jobId Int?
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  email    String @unique
-  password String
-  refreshToken String @default("")
-  jobs Job[]
+  id            Int    @id @default(autoincrement())
+  username      String @unique
+  email         String @unique
+  password      String
+  refreshToken  String @default("")
+  clientJobs    Job[]  @relation("userClient_job")
+  developerJobs Job[]  @relation("userDeveloper_job")
+  roles         Role[]
+}
+
+model Role {
+  id     Int    @id @default(autoincrement())
+  name   String
+  users   User[]   
 }

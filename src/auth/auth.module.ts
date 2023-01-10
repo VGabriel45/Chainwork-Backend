@@ -13,7 +13,7 @@ import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
     PassportModule,
     UserModule,
     JwtModule.register({
-      signOptions: { expiresIn: '15m' },
+      signOptions: { expiresIn: 15 },
       secret: process.env.SECRET,
     }),
   ],

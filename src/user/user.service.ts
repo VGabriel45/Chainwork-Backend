@@ -10,36 +10,19 @@ export class UserService {
     return this.prisma.user.create({ data: createUserInput });
   }
 
-  findAll(): Promise<
-    {
-      username: string;
-      email: string;
-      jobs: Job[];
-    }[]
-    > {
-    return this.prisma.user.findMany({
-      select: { username: true, email: true, jobs: true },
-    });
+  findAll(): Promise<any[]> {
+    return this.prisma.user.findMany({});
   }
 
   findOne(id: number): Promise<User> {
     return this.prisma.user.findUnique({
       where: { id },
-      select: { id: true, username: true, email: true, jobs: true, refreshToken: true },
     });
   }
 
   findOneByUsername(username: string): Promise<User> {
     return this.prisma.user.findUnique({
       where: { username },
-      select: {
-        id: true,
-        username: true,
-        password: true,
-        email: true,
-        refreshToken: true,
-        jobs: true,
-      },
     });
   }
 
